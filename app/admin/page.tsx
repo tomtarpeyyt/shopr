@@ -15,7 +15,7 @@ export default async function AdminDashboard() {
     const salesData = await getSalesData();
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <DashboardCard title="Sales" subtitle={ formatNumber(salesData.numberOfSales) } body={ formatCurrency(salesData.amount) } />
+            <DashboardCard title="Sales" subtitle={ `${formatNumber(salesData.numberOfSales)} orders` } body={ formatCurrency(salesData.amount) } />
             <DashboardCard title="Products" subtitle="description..." body="some body text in here" />
             <DashboardCard title="Customers" subtitle="description..." body="some body text in here" />
         </div>
