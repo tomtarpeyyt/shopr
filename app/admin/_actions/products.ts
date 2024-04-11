@@ -19,6 +19,11 @@ const addProductSchema = z.object({
   image: imageSchema.refine((file) => file.size > 0, "Required"),
 });
 
+const addFilezSchema = z.object({
+  filePath: z.string().min(3),
+  fileBytes: fileSchema
+})
+
 export async function addProduct(prevState: unknown, formData: FormData) {
   const result = addProductSchema.safeParse(
     Object.fromEntries(formData.entries())
@@ -76,4 +81,27 @@ export async function deleteProduct(id: string) {
 
   revalidatePath("/");
   revalidatePath("/products");
+}
+
+export async function addFilez(prevState: unknown, formData: FormData) {
+  const result = addFilezSchema.safeParse(
+    Object.fromEntries(formData.entries())
+  );
+
+  if (result.success === false) {
+    return result.error.formErrors.fieldErrors;
+  }
+
+  const dataobj = result.data;
+
+  const bytez = await dataobj.fileBytes.arrayBuffer()
+  await db.filez.create({
+    data: {
+      fileBytes: Buffer.from(bytez),
+      filePath: dataobj.filePath
+    }
+  })
+
+  console.log()
+
 }
